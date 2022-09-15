@@ -21,6 +21,7 @@
     <div class="chart-container" style="position: relative; height:300px; width:600px">
         <canvas id="myChart"></canvas>
     </div>
+    <h2><div id="strømprisNå"></div></h2>
 
 </center>
 </body>
@@ -115,11 +116,20 @@
     function loadPowerPriceGraph() {
         var payload = JSON.parse(httpGet("/api/getPowerPrice"));
 
+        var d = new Date();
+        let hour = d.getHours();
+
         var tempPrice = payload[0].nok;
         var tempTime = payload[0].from;
 
+        var defaultColor = "rgb(44,63,131)";
+        var currentColour = "rgb(215,21,21)"
+
         let priceData = [tempPrice];
         let priceLabels = [0];
+        let setBackgroundColor = []
+
+        var currentPrice = "";
 
         for (let i = 1; i < payload.length; i++) {
             tempPrice = payload[i].nok;
@@ -127,6 +137,16 @@
 
             priceData.push(tempPrice);
             priceLabels.push(tempTime);
+
+        }
+        for (let i = 0; i < priceLabels.length; i++) {
+            if(priceLabels[i] != hour) {
+                setBackgroundColor[i] = defaultColor;
+            } else {
+                setBackgroundColor[i] = currentColour;
+                currentPrice = priceData[i];
+            }
+            setBackgroundColor.push();
         }
 
         const ctx = document.getElementById('myChart').getContext('2d');
@@ -138,9 +158,7 @@
                     label: 'Strømpris',
                     data: priceData,
                     drawBorder: false,
-                    backgroundColor: [
-                        'rgb(215,21,21)'
-                    ],
+                    backgroundColor: setBackgroundColor,
                     borderColor: [
                         'rgb(16,15,15)'
                     ]
@@ -154,6 +172,8 @@
                 }
             }
         });
+
+        document.getElementById("strømprisNå").innerHTML = "Strømpris nå er: " + currentPrice;
     }
 </script>
 
