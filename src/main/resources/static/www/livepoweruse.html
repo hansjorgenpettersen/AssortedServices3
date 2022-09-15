@@ -119,7 +119,7 @@
         return xmlHttp.responseText;
     }
 
-        var payload = httpGet("/api/getPowerPrice");
+        var payload = JSON.parse(httpGet("/api/getPowerPrice"));
 
         var tempPrice = payload[0].NOK_per_kWh;
         var tempTime = payload[0].NOK_per_kWh;
