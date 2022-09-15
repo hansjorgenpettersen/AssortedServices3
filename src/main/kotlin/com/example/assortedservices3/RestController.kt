@@ -17,7 +17,10 @@ class RestController {
     var recentData = NodeRedData()
     lateinit var powerPriceList : List<PowerPrices>
 
-
+    @Autowired
+    fun setRequest(request: HttpServletRequest?) {
+        this.request = request
+    }
     //Recive home Ip address
     @GetMapping("/setHomeAddress")
     fun setHomeAddress(){
