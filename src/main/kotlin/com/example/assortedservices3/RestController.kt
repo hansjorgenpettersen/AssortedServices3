@@ -15,7 +15,7 @@ class RestController {
     var homeIp = "Not Set"
     var powerUse = "0"
     var recentData = NodeRedData()
-    lateinit var powerPriceList : List<PowerPrices>
+    lateinit var powerPriceList : List<PowerPrice>
 
     @Autowired
     fun setRequest(request: HttpServletRequest?) {
@@ -28,7 +28,7 @@ class RestController {
         if (request != null) {
             remoteAddr = request!!.getHeader("X-FORWARDED-FOR")
             if (remoteAddr == null || "" == remoteAddr) {
-                remoteAddr = request!!.remoteAddr
+                homeIp = request!!.remoteAddr
             }
         }
     }
@@ -55,12 +55,12 @@ class RestController {
         return recentData
     }
     @PostMapping ("api/nodeRed/powerPrices")
-    fun getPowerPriceFromNodeRed(@RequestBody data:List<PowerPrices>): String {
+    fun getPowerPriceFromNodeRed(@RequestBody data:List<PowerPrice>): String {
         powerPriceList = data;
         return "OK"
     }
     @GetMapping ("api/getPowerPrice")
-    fun getPowerPrice():List<PowerPrices> {
+    fun getPowerPrice():List<PowerPrice> {
         return powerPriceList;
     }
 

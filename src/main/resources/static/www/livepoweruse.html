@@ -103,22 +103,13 @@
 
         updateMessures()
         updatePowerGauge(powerGauge)
+        loadPowerPriceGraph()
 
         setInterval(function (){updatePowerGauge(powerGauge);},3000)
         setInterval(function(){updateMessures()}, 10000)
     }
-</script>
 
-<!CHART>
-<script>
-
-    function httpGet(theUrl) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
-        return xmlHttp.responseText;
-    }
-
+    function loadPowerPriceGraph() {
         var payload = JSON.parse(httpGet("/api/getPowerPrice"));
 
         var tempPrice = payload[0].NOK_per_kWh;
@@ -127,7 +118,7 @@
         let priceData = [tempPrice];
         let priceLabels = [0];
 
-        for (let i = 1; i < payload.length; i++){
+        for (let i = 1; i < payload.length; i++) {
             tempPrice = payload[i].NOK_per_kWh;
             tempTime = i;
 
@@ -137,21 +128,21 @@
 
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-        labels: priceLabels,
-        datasets: [{
-            label: 'Strømpris',
-            data: priceData,
-            drawBorder: false,
-            backgroundColor: [
-                'rgb(215,21,21)'
-            ],
-            borderColor: [
-                'rgb(16,15,15)'
-            ]
-        }]
-        },
+            type: 'bar',
+            data: {
+                labels: priceLabels,
+                datasets: [{
+                    label: 'Strømpris',
+                    data: priceData,
+                    drawBorder: false,
+                    backgroundColor: [
+                        'rgb(215,21,21)'
+                    ],
+                    borderColor: [
+                        'rgb(16,15,15)'
+                    ]
+                }]
+            },
             options: {
                 scales: {
                     y: {
@@ -160,7 +151,7 @@
                 }
             }
         });
-
+    }
 </script>
 
 </html>
