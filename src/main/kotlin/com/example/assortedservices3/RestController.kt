@@ -15,12 +15,9 @@ class RestController {
     var homeIp = "Not Set"
     var powerUse = "0"
     var recentData = NodeRedData()
-    var powerPrice = PowerPrices()
+    lateinit var powerPriceList : List<PowerPrices>
 
-    @Autowired
-    fun setRequest(request: HttpServletRequest?) {
-        this.request = request
-    }
+
     //Recive home Ip address
     @GetMapping("/setHomeAddress")
     fun setHomeAddress(){
@@ -55,9 +52,13 @@ class RestController {
         return recentData
     }
     @PostMapping ("api/nodeRed/powerPrices")
-    fun getPowerPriceFromNodeRed(@RequestBody data:PowerPrices): String {
-        powerPrice = data;
+    fun getPowerPriceFromNodeRed(@RequestBody data:List<PowerPrices>): String {
+        powerPriceList = data;
         return "OK"
+    }
+    @GetMapping ("api/getPowerPrice")
+    fun getPowerPrice():List<PowerPrices> {
+        return powerPriceList;
     }
 
 }

@@ -11,6 +11,7 @@
 
     <canvas id="livePowerGauge"></canvas>
     <h1><div id="powerUseAsText"></div></h1>
+    <h1><div id="pricePrHour"></div></h1>
 
 
     <h1><div id="outdoorTemp"></div></h1>
@@ -80,9 +81,9 @@
             },
             limitMax: false,     // If false, max value increases automatically if value > maxValue
             limitMin: false,     // If true, the min value of the gauge will be fixed
-            colorStart: '#e20e29',   // Colors
-            colorStop: '#1824a6',    // just experiment with them
-            strokeColor: '#c43737',  // to see which ones work best for you
+            colorStart: '#20b60e',   // Colors
+            colorStop: '#d71515',    // just experiment with them
+            strokeColor: '#a5c437',  // to see which ones work best for you
             generateGradient: true,
             highDpiSupport: true,     // High resolution support
 
@@ -91,12 +92,13 @@
     function updatePowerGauge(gauge) {
         var value = getPowerUse();
 
-        if(value>2000) {
+        if(value>4000) {
             gauge.setOptions(changeColor())
         }
         gauge.set(value);
         gauge.render()
         document.getElementById("powerUseAsText").innerHTML = value + " Watt";
+        document.getElementById("pricePrHour").innerHTML =
     }
     function loader() {
 
