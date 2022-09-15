@@ -36,13 +36,13 @@
         return xmlHttp.responseText;
     }
     function updateMessures() {
-        let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
+        let jsonObject = JSON.parse(httpGet("api/getNodeRedData"));
         document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius";
         document.getElementById("stueNede").innerHTML = "Nede "+jsonObject.livingRoomTemperature2 + " Celsius";
         document.getElementById("stueOppe").innerHTML = "Oppe "+jsonObject.livingRoomTemperature + " Celsius";
     }
     function getPowerUse() {
-        return httpGet("http://185.7.61.179:8080/api/power/live")
+        return httpGet("/api/power/live")
     }
     function getPowerGauge() {
         var opts = {
@@ -113,7 +113,7 @@
         setInterval(function(){updateMessures()}, 10000)
     }
     function loadPowerPriceGraph() {
-        var payload = JSON.parse(httpGet("api/getPowerPrice"));
+        var payload = JSON.parse(httpGet("/api/getPowerPrice"));
 
         var tempPrice = payload[0].nok;
         var tempTime = payload[0].from;
