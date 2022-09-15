@@ -36,7 +36,7 @@
     }
     function updateMessures() {
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
-        document.getElementById("outdoorTemp").innerHTML = jsonObject.outdoorTemperature + " Watt";
+        document.getElementById("outdoorTemp").innerHTML = jsonObject.outdoorTemperature + " Celsius";
     }
     function getPowerUse() {
         return httpGet("/api/power/live")
@@ -96,7 +96,7 @@
         }
         gauge.set(value);
         gauge.render()
-        document.getElementById("powerUseAsText").innerHTML = value + " Celsius";
+        document.getElementById("powerUseAsText").innerHTML = value + " Watt";
     }
     function loader() {
 
