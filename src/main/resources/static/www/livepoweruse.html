@@ -11,8 +11,6 @@
 
     <canvas id="livePowerGauge"></canvas>
     <h1><div id="powerUseAsText"></div></h1>
-    <h1><div id="pricePrHour"></div></h1>
-
 
     <h1><div id="outdoorTemp"></div></h1>
 
@@ -98,7 +96,6 @@
         gauge.set(value);
         gauge.render()
         document.getElementById("powerUseAsText").innerHTML = value + " Watt";
-        document.getElementById("pricePrHour").innerHTML =
     }
     function loader() {
 
