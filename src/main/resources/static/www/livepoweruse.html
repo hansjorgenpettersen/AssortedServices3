@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live power use</title>
+</head>
+<body onload="loader()">
+<center>
+
+    <h1>Strømforbruk</h1><br>
+
+    <canvas id="livePowerGauge"></canvas>
+    <h1><div id="powerUseAsText"></div></h1>
+
+
+    <h1><div id="outdoorTemp"></div></h1>
+
+    <br>
+
+    <div class="chart-container" style="position: relative; height:300px; width:600px">
+        <canvas id="myChart"></canvas>
+    </div>
+
+</center>
+</body>
+
+<script src="/www/dist/gauge.js"></script>
+<script src="/www/dist/chart.min.js"></script>
+<!GAUGE>
+<script>
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+    function updateMessures() {
+        let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
+        document.getElementById("outdoorTemp").innerHTML = jsonObject.outdoorTemperature + " Watt";
+    }
+    function getPowerUse() {
+        return httpGet("/api/power/live")
+    }
+    function getPowerGauge() {
+        var opts = {
+            angle: 0.15, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+                length: 0.92, // // Relative to gauge radius
+                strokeWidth: 0.033, // The thickness
+                color: '#d71515' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#1824a6',    // just experiment with them
+            strokeColor: '#2c3f83',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+
+        };
+        var target = document.getElementById("livePowerGauge"); // your canvas element
+        var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+        gauge.maxValue = 12000; // set max gauge value
+        gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+        gauge.animationSpeed = 20; // set animation speed (32 is default value)
+
+        return gauge
+    }
+    function changeColor() {
+        return  {
+            angle: 0.15, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+                length: 0.92, // // Relative to gauge radius
+                strokeWidth: 0.033, // The thickness
+                color: '#000000' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#e20e29',   // Colors
+            colorStop: '#1824a6',    // just experiment with them
+            strokeColor: '#c43737',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+
+        };
+    }
+    function updatePowerGauge(gauge) {
+        var value = getPowerUse();
+
+        if(value>2000) {
+            gauge.setOptions(changeColor())
+        }
+        gauge.set(value);
+        gauge.render()
+        document.getElementById("powerUseAsText").innerHTML = value + " Celsius";
+    }
+    function loader() {
+
+        let powerGauge = getPowerGauge();
+
+        updateMessures()
+        updatePowerGauge(powerGauge)
+
+        setInterval(function (){updatePowerGauge(powerGauge);},3000)
+        setInterval(function(){updateMessures()}, 10000)
+    }
+</script>
+
+<!CHART>
+<script>
+
+        const payload = [
+            {
+                "NOK_per_kWh": 4.0256,
+                "valid_from": "2022-09-15T00:00:00+02:00",
+                "valid_to": "2022-09-15T01:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.4957,
+                "valid_from": "2022-09-15T01:00:00+02:00",
+                "valid_to": "2022-09-15T02:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.2668,
+                "valid_from": "2022-09-15T02:00:00+02:00",
+                "valid_to": "2022-09-15T03:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.1148,
+                "valid_from": "2022-09-15T03:00:00+02:00",
+                "valid_to": "2022-09-15T04:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 2.8066,
+                "valid_from": "2022-09-15T04:00:00+02:00",
+                "valid_to": "2022-09-15T05:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.7723,
+                "valid_from": "2022-09-15T05:00:00+02:00",
+                "valid_to": "2022-09-15T06:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.9232,
+                "valid_from": "2022-09-15T06:00:00+02:00",
+                "valid_to": "2022-09-15T07:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.2575,
+                "valid_from": "2022-09-15T07:00:00+02:00",
+                "valid_to": "2022-09-15T08:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.2733,
+                "valid_from": "2022-09-15T08:00:00+02:00",
+                "valid_to": "2022-09-15T09:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.2877,
+                "valid_from": "2022-09-15T09:00:00+02:00",
+                "valid_to": "2022-09-15T10:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.076,
+                "valid_from": "2022-09-15T10:00:00+02:00",
+                "valid_to": "2022-09-15T11:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.8457,
+                "valid_from": "2022-09-15T11:00:00+02:00",
+                "valid_to": "2022-09-15T12:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.4142,
+                "valid_from": "2022-09-15T12:00:00+02:00",
+                "valid_to": "2022-09-15T13:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.1214,
+                "valid_from": "2022-09-15T13:00:00+02:00",
+                "valid_to": "2022-09-15T14:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.0649,
+                "valid_from": "2022-09-15T14:00:00+02:00",
+                "valid_to": "2022-09-15T15:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 2.6913,
+                "valid_from": "2022-09-15T15:00:00+02:00",
+                "valid_to": "2022-09-15T16:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 2.9961,
+                "valid_from": "2022-09-15T16:00:00+02:00",
+                "valid_to": "2022-09-15T17:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.6111,
+                "valid_from": "2022-09-15T17:00:00+02:00",
+                "valid_to": "2022-09-15T18:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.1069,
+                "valid_from": "2022-09-15T18:00:00+02:00",
+                "valid_to": "2022-09-15T19:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.1849,
+                "valid_from": "2022-09-15T19:00:00+02:00",
+                "valid_to": "2022-09-15T20:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 4.2389,
+                "valid_from": "2022-09-15T20:00:00+02:00",
+                "valid_to": "2022-09-15T21:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.9316,
+                "valid_from": "2022-09-15T21:00:00+02:00",
+                "valid_to": "2022-09-15T22:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 3.5312,
+                "valid_from": "2022-09-15T22:00:00+02:00",
+                "valid_to": "2022-09-15T23:00:00+02:00"
+            },
+            {
+                "NOK_per_kWh": 2.6219,
+                "valid_from": "2022-09-15T23:00:00+02:00",
+                "valid_to": "2022-09-16T00:00:00+02:00"
+            }
+        ]
+
+        var tempPrice = payload[0].NOK_per_kWh;
+        var tempTime = payload[0].NOK_per_kWh;
+
+        let priceData = [tempPrice];
+        let priceLabels = [0];
+
+        for (let i = 1; i < payload.length; i++){
+            tempPrice = payload[i].NOK_per_kWh;
+            tempTime = i;
+
+            priceData.push(tempPrice);
+            priceLabels.push(tempTime);
+        }
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: priceLabels,
+        datasets: [{
+            label: 'Strømpris',
+            data: priceData,
+            drawBorder: false,
+            backgroundColor: [
+                'rgb(215,21,21)'
+            ],
+            borderColor: [
+                'rgb(16,15,15)'
+            ]
+        }]
+        },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+</script>
+
+</html>
