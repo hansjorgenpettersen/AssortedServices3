@@ -188,8 +188,8 @@
         let dataLabels = [payload[0].hour];
 
         for (let i = 1; i < payload.length; i++) {
-            dataValues.push([payload[0].measure]);
-            dataLabels.push(payload[0].hour);
+            dataValues.push([payload[i].measure]);
+            dataLabels.push(payload[i].hour);
         }
 
         const ctx = document.getElementById('netatmoHistory').getContext('2d');
