@@ -181,14 +181,14 @@
         document.getElementById("strømprisNå").innerHTML = "Strømpris nå er: " + currentPrice;
     }
     function loadNetatmoHistoryGraph(){
-        var defaultColor = "rgb(86,108,183)";
-        var payload = JSON.parse(httpGet("/api/getNetatmoHistory"));
+        const defaultColor = "rgb(86,108,183)";
+        let payload = JSON.parse(httpGet("/api/getNetatmoHistory"));
 
         let dataValues = [payload[0].measure];
         let dataLabels = [payload[0].hour];
 
         for (let i = 1; i < payload.length; i++) {
-            dataValues.push([payload[i].measure]);
+            dataValues.push(payload[i].measure);
             dataLabels.push(payload[i].hour);
         }
 
