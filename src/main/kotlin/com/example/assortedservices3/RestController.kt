@@ -16,21 +16,27 @@ class RestController {
     var powerUse = "0"
     var recentData = NodeRedData()
     lateinit var powerPriceList : List<PowerPrice>
+    lateinit var netatmoMeassureList : List<Meassure>
 
     @Autowired
     fun setRequest(request: HttpServletRequest?) {
         this.request = request
     }
-    //Recive home Ip address
     @GetMapping("/setHomeAddress")
-    fun setHomeAddress(){
+    fun setHomeAddress(): String? {
         var remoteAddr: String? = ""
         if (request != null) {
             remoteAddr = request!!.getHeader("X-FORWARDED-FOR")
             if (remoteAddr == null || "" == remoteAddr) {
-                homeIp = request!!.remoteAddr
+                remoteAddr = request!!.remoteAddr
             }
         }
+
+        homeIp = remoteAddr.toString()
+
+        println("Home Address Is: " + remoteAddr)
+
+        return remoteAddr
     }
     @GetMapping("/getHomeIP")
     fun getHomeIP():String {
@@ -63,5 +69,13 @@ class RestController {
     fun getPowerPrice():List<PowerPrice> {
         return powerPriceList;
     }
-
+    @PostMapping ("api/setNetatmoHistory")
+    fun setNetatmoHistory(@RequestBody data:List<Meassure>):String {
+        netatmoMeassureList = data;
+        return "OK"
+    }
+    @GetMapping("api/getNetatmoHistory")
+    fun getNetatmoHistory():List<Meassure> {
+        return netatmoMeassureList;
+    }
 }
