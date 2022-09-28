@@ -193,9 +193,9 @@
         let dataValues = [payload[0].measure];
         let dataLabels = []
 
-        for (let i = 0; i < payload.length; i++) {
+        for (let i = payload.length-1; i>0 ; i--) {
             dataValues.push(payload[i].measure);
-            dataLabels.push([payload[i].year] +[payload[i].day] + [payload[i].month]);
+            dataLabels.push([payload[i].day] +"/"+ [payload[i].month]);
         }
 
         const ctx = document.getElementById('netatmoHistory').getContext('2d');
