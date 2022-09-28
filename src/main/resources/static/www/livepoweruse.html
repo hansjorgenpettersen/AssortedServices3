@@ -35,10 +35,16 @@
 <!GAUGE>
 <script>
     function httpGet(theUrl) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
-        return xmlHttp.responseText;
+
+        try{
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        } catch (err) {
+            return "API Error: " + err;
+        }
+
     }
     function updateMessures() {
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
@@ -145,7 +151,7 @@
 
         }
         for (let i = 0; i < priceLabels.length; i++) {
-            if(priceLabels[i] != hour) {
+            if(priceLabels[i] !== hour) {
                 setBackgroundColor[i] = defaultColor;
             } else {
                 setBackgroundColor[i] = currentColour;
@@ -181,15 +187,15 @@
         document.getElementById("strømprisNå").innerHTML = "Strømpris nå er: " + currentPrice;
     }
     function loadNetatmoHistoryGraph(){
-        const defaultColor = "rgb(86,108,183)";
+        const defaultColor = "rgb(41,152,12)";
         let payload = JSON.parse(httpGet("/api/getNetatmoHistory"));
 
         let dataValues = [payload[0].measure];
-        let dataLabels = [payload[0].hour];
+        let dataLabels = []
 
-        for (let i = 1; i < payload.length; i++) {
+        for (let i = 0; i < payload.length; i++) {
             dataValues.push(payload[i].measure);
-            dataLabels.push(payload[i].hour);
+            dataLabels.push([payload[i].year] +[payload[i].day] + [payload[i].month]);
         }
 
         const ctx = document.getElementById('netatmoHistory').getContext('2d');
@@ -198,7 +204,7 @@
             data: {
                 labels: dataLabels,
                 datasets: [{
-                    label: 'Strømpris',
+                    label: 'Temperatur',
                     data: dataValues,
                     drawBorder: false,
                     backgroundColor: defaultColor,
