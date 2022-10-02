@@ -48,7 +48,7 @@
     }
     function updateMessures() {
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
-        document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius";
+        document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius" + "Trend: " + jsonObject.tempTrend;
         document.getElementById("stueNede").innerHTML = "Nede "+jsonObject.livingRoomTemperature2 + " Celsius";
         document.getElementById("stueOppe").innerHTML = "Oppe "+jsonObject.livingRoomTemperature + " Celsius";
     }
