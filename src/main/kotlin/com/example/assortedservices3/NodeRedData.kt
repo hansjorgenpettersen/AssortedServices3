@@ -10,6 +10,7 @@ class NodeRedData {
     var hallwayTemperature = 0.0 //Gang oppe
     var mainBedromTemperature = 0.0
     var mogensTemperature = 0.0
+    var tempSoverom = 0.0
 
     //Extended Wether Data
     var co2Inndor = 0
