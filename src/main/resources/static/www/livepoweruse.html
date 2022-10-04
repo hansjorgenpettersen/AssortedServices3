@@ -54,6 +54,7 @@
     function updateMessures(pressureGauge) {
 
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
+
         document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius" + " " + jsonObject.tempTrend;
         document.getElementById("stueNede").innerHTML = "Nede "+jsonObject.livingRoomTemperature2 + " Celsius";
         document.getElementById("stueOppe").innerHTML = "Oppe "+jsonObject.livingRoomTemperature + " Celsius";
@@ -95,7 +96,6 @@
         }
         gauge.set(value);
         gauge.render()
-        document.getElementById("powerUseAsText").innerHTML = value + " Watt";
     }
     function getPowerUse() {
         return httpGet("/api/power/live")
