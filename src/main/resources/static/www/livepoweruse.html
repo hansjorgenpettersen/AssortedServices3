@@ -51,7 +51,7 @@
         }
 
     }
-    function updateMessures(pressureGauge) {
+    function updateMessures() {
 
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
 
@@ -59,8 +59,7 @@
         document.getElementById("stueNede").innerHTML = "Nede "+jsonObject.livingRoomTemperature2 + " Celsius";
         document.getElementById("stueOppe").innerHTML = "Oppe "+jsonObject.livingRoomTemperature + " Celsius";
         document.getElementById("tempSoverom").innerHTML = "Soverom "+jsonObject.tempSoverom + " Celsius";
-        document.getElementById("livePressureGauge").innerHTML = updatePressureGauge(pressureGauge,jsonObject.pressure);
-        document.getElementById("pressureAsText").innerHTML = jsonObject.pressure + " Hpa";
+
     }
     function getPressureGauge() {
         var opts = {
@@ -89,13 +88,20 @@
 
         return gauge
     }
-    function updatePressureGauge(gauge,value) {
+    function updatePressureGauge(gauge) {
+
+        let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
+        let value = jsonObject.pressure;
 
         if(value>1000) {
             gauge.setOptions(changeColor())
         }
         gauge.set(value);
         gauge.render()
+
+        document.getElementById("pressureAsText").innerHTML = value + " Hpa";
+
+
     }
     function getPowerUse() {
         return httpGet("/api/power/live")
@@ -169,6 +175,7 @@
 
         setInterval(function (){updatePowerGauge(powerGauge);},3000)
         setInterval(function(){updateMessures(pressureGauge)}, 10000)
+        setInterval(function (){updatePressureGauge(pressureGauge)},10000)
     }
     function loadPowerPriceGraph() {
         var payload = JSON.parse(httpGet("/api/getPowerPrice"));
