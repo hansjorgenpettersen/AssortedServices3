@@ -17,6 +17,9 @@
     <h2><div id="stueOppe"></div></h2>
     <h2><div id="tempSoverom"></div></h2>
 
+    <canvas id="livePressureGauge"></canvas>
+    <h1><div id="pressureAsText"></div></h1>
+
 
     <br>
 
@@ -49,11 +52,52 @@
 
     }
     function updateMessures() {
+
+        let pressureGauge = getPressureGauge();
+
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
         document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius" + " " + jsonObject.tempTrend;
         document.getElementById("stueNede").innerHTML = "Nede "+jsonObject.livingRoomTemperature2 + " Celsius";
         document.getElementById("stueOppe").innerHTML = "Oppe "+jsonObject.livingRoomTemperature + " Celsius";
         document.getElementById("tempSoverom").innerHTML = "Soverom "+jsonObject.tempSoverom + " Celsius";
+        document.getElementById("livePressureGauge").innerHTML = updatePressureGauge(pressureGauge,jsonObject.pressure);
+        document.getElementById("pressureAsText").innerHTML = jsonObject.pressure + " Hpa";
+    }
+    function getPressureGauge() {
+        var opts = {
+            angle: 0.15, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+                length: 0.92, // // Relative to gauge radius
+                strokeWidth: 0.033, // The thickness
+                color: '#d71515' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#1824a6',    // just experiment with them
+            strokeColor: '#2c3f83',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+
+        };
+        var target = document.getElementById("livePressureGauge"); // your canvas element
+        var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+        gauge.maxValue = 1061 ; // set max gauge value
+        gauge.setMinValue(938);  // Prefer setter over gauge.minValue = 0
+        gauge.animationSpeed = 20; // set animation speed (32 is default value)
+
+        return gauge
+    }
+    function updatePressureGauge(gauge,value) {
+
+        if(value>1000) {
+            gauge.setOptions(changeColor())
+        }
+        gauge.set(value);
+        gauge.render()
+        document.getElementById("powerUseAsText").innerHTML = value + " Watt";
     }
     function getPowerUse() {
         return httpGet("/api/power/live")
