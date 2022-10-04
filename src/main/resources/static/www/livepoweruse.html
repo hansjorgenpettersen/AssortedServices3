@@ -51,9 +51,7 @@
         }
 
     }
-    function updateMessures() {
-
-        let pressureGauge = getPressureGauge();
+    function updateMessures(pressureGauge) {
 
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
         document.getElementById("outdoorTemp").innerHTML = "Ute " + jsonObject.outdoorTemperature + " Celsius" + " " + jsonObject.tempTrend;
@@ -162,6 +160,7 @@
     function loader() {
 
         let powerGauge = getPowerGauge();
+        let pressureGauge = getPressureGauge();
 
         updateMessures()
         updatePowerGauge(powerGauge)
@@ -169,7 +168,7 @@
         loadNetatmoHistoryGraph()
 
         setInterval(function (){updatePowerGauge(powerGauge);},3000)
-        setInterval(function(){updateMessures()}, 10000)
+        setInterval(function(){updateMessures(pressureGauge)}, 10000)
     }
     function loadPowerPriceGraph() {
         var payload = JSON.parse(httpGet("/api/getPowerPrice"));
