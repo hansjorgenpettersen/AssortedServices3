@@ -96,8 +96,14 @@
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
         let value = jsonObject.pressure;
 
-        if(value>1000) {
-            gauge.setOptions(changeColor())
+        if(value<980) {
+            gauge.colorStart.set('#2c3f83');
+        }
+        if(value>1025) {
+            gauge.colorStart.set('#e20e29')
+        }
+        else {
+            gauge.colorStart.set('#29980c')
         }
         gauge.set(value);
         gauge.render()
