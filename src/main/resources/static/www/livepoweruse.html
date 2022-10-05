@@ -51,6 +51,9 @@
         }
 
     }
+    function getPowerUse() {
+        return httpGet("/api/power/live")
+    }
     function updateMessures() {
 
         let jsonObject = JSON.parse(httpGet("/api/getNodeRedData"));
@@ -84,7 +87,7 @@
         var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
         gauge.maxValue = 1061 ; // set max gauge value
         gauge.setMinValue(938);  // Prefer setter over gauge.minValue = 0
-        gauge.animationSpeed = 20; // set animation speed (32 is default value)
+        gauge.animationSpeed = 35; // set animation speed (32 is default value)
 
         return gauge
     }
@@ -102,9 +105,6 @@
         document.getElementById("pressureAsText").innerHTML = value + " Hpa";
 
 
-    }
-    function getPowerUse() {
-        return httpGet("/api/power/live")
     }
     function getPowerGauge() {
         var opts = {
@@ -170,6 +170,7 @@
 
         updateMessures()
         updatePowerGauge(powerGauge)
+        updatePressureGauge(pressureGauge)
         loadPowerPriceGraph()
         loadNetatmoHistoryGraph()
 
