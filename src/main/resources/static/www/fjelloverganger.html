@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fjelloverganger</title>
+</head>
+<body onload="loadImages()">
+
+<center><div id="images"></div></center>
+
+<script>
+
+    function httpGet(theUrl) {
+
+        try{
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        } catch (err) {
+            return "API Error: " + err;
+        }
+
+    }
+    function loadImages() {
+        let jsonObject = JSON.parse(httpGet("/api/getFjellImages"));
+        var html = ""
+
+        for (let i = 1; i < jsonObject.length; i++) {
+
+            html = html + "<img src=\"" + jsonObject[i].toString() + "\" width=\"200\" height=\"200\" br>";
+
+        }
+        document.getElementById("images").innerHTML = html;
+    }
+
+</script>
+</body>
+</html>

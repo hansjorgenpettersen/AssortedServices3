@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hardangervidda</title>
+</head>
+<body onload="updateRoadInfo()">
+
+<center><H1><div id="message"></div></H1></center>
+<center><div id="images"></div></center>
+
+<script>
+    function httpGet(theUrl) {
+
+        try{
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        } catch (err) {
+            return "API Error: " + err;
+        }
+
+    }
+
+    function updateRoadInfo() {
+        let jsonObject = JSON.parse(httpGet("/api/getFjell?navn=Hardangervidda"));
+
+        let imgHtml = "";
+        let messageHtml = ""
+
+        let lokasjoner =  jsonObject.lokasjoner;
+        for (var i in lokasjoner) {
+            let kameraUrler = lokasjoner[i].kameraUrler;
+            for(var y in kameraUrler) {
+                imgHtml = imgHtml + "<img src=\"" + kameraUrler[y] + "\"><br>";
+            }
+        }
+        document.getElementById("images").innerHTML = imgHtml;
+
+        let trafikkmeldinger = jsonObject.trafikkmeldinger;
+
+        for(var i in trafikkmeldinger) {
+            messageHtml= messageHtml + trafikkmeldinger[i].beskrivelse + "<br><br>";
+        }
+        if(messageHtml.length==0) {
+            messageHtml = "Ingen meldinger :) <br><br>";
+        }
+        document.getElementById("message").innerHTML = messageHtml;
+    }
+
+</script>
+
+</body>
+</html>

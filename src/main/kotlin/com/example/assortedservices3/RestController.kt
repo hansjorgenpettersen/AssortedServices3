@@ -82,7 +82,7 @@ class RestController {
     fun getNetatmoHistory():List<Meassure> {
         return netatmoMeassureList;
     }
-    @GetMapping ("/api/fjell")
+    @GetMapping ("/api/updateFjell")
     fun getFjelloverganger():Array<Fjell> {
 
         return fjell.getFjelloverganger()

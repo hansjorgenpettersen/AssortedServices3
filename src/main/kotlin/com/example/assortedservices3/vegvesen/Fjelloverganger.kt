@@ -38,7 +38,6 @@ class Fjelloverganger {
             while(fjell[i].lokasjoner.size>x) {
                 while (fjell[i].lokasjoner[x].kameraUrler.size > y) {
                     urlList.add(listIndex,fjell[i].lokasjoner[x].kameraUrler[y])
-                    println(fjell[i].lokasjoner[x].kameraUrler[y])
                     listIndex++
                     y++
                 }
