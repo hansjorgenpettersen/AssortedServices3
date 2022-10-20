@@ -1,5 +1,7 @@
 package com.example.assortedservices3
 
+import com.example.assortedservices3.vegvesen.Fjell
+import com.example.assortedservices3.vegvesen.Fjelloverganger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,6 +19,8 @@ class RestController {
     var recentData = NodeRedData()
     lateinit var powerPriceList : List<PowerPrice>
     lateinit var netatmoMeassureList : List<Meassure>
+
+    var fjell = Fjelloverganger()
 
     @Autowired
     fun setRequest(request: HttpServletRequest?) {
@@ -77,5 +81,18 @@ class RestController {
     @GetMapping("api/getNetatmoHistory")
     fun getNetatmoHistory():List<Meassure> {
         return netatmoMeassureList;
+    }
+    @GetMapping ("/api/fjell")
+    fun getFjelloverganger():Array<Fjell> {
+
+        return fjell.getFjelloverganger()
+    }
+    @GetMapping ("/api/getFjell")
+    fun getFjell(@RequestParam navn:String) : Fjell {
+        return fjell.getFjell(navn)
+    }
+    @GetMapping ("/api/getFjellImages")
+    fun getAllImageUrls () : List<String> {
+        return fjell.getAllImages()
     }
 }
