@@ -95,4 +95,8 @@ class RestController {
     fun getAllImageUrls () : List<String> {
         return fjell.getAllImages()
     }
+    @GetMapping ("/api/getFjellNames")
+    fun getFjellNames():List<String>{
+        return fjell.getAllFjell()
+    }
 }

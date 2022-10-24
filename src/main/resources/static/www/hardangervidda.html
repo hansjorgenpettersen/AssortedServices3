@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <title>Hardangervidda</title>
 </head>
-<body onload="updateRoadInfo()">
+<body onload="initialLoadOfFjell()">
 
-<center><H1><div id="message"></div></H1></center>
+<center><select id="selectRoad" onchange="updateFjell()"></select>
+<button id="button" onclick="updateAllMessages()">Update</button></center>
+
+<center><H3><div id="message"></div></H3></center>
 <center><div id="images"></div></center>
 
 <script>
@@ -22,8 +25,18 @@
         }
 
     }
+    function initialLoadOfFjell() {
 
-    function updateRoadInfo() {
+        let options = JSON.parse(httpGet("/api/getFjellNames"));
+        var select = document.getElementById("selectRoad");
+
+        for (let i = 0; i < options.length; i++) {
+            let el = document.createElement("option");
+            el.text = options[i];
+            el.value = options[i];
+            select.add(el);
+        }
+
         let jsonObject = JSON.parse(httpGet("/api/getFjell?navn=Hardangervidda"));
 
         let imgHtml = "";
@@ -41,14 +54,48 @@
         let trafikkmeldinger = jsonObject.trafikkmeldinger;
 
         for(var i in trafikkmeldinger) {
-            messageHtml= messageHtml + trafikkmeldinger[i].beskrivelse + "<br><br>";
+            messageHtml= messageHtml + "<br>" + trafikkmeldinger[i].beskrivelse + "<br>startTid: " + trafikkmeldinger[i].startTid.toString() +"<br>sluttTid: " + trafikkmeldinger[i].sluttTid.toString() +"<br><br>";
+        }
+        if(messageHtml.length==0) {
+            messageHtml = "Ingen meldinger!<br><br>";
+        }
+        document.getElementById("message").innerHTML = messageHtml;
+
+    }
+    function updateFjell(){
+
+        var e = document.getElementById("selectRoad");
+        var value = e.value;
+        var text = e.options[e.selectedIndex].text
+
+
+        let jsonObject = JSON.parse(httpGet("/api/getFjell?navn="+text));
+
+        let imgHtml = "";
+        let messageHtml = ""
+
+        let lokasjoner =  jsonObject.lokasjoner;
+        for (var i in lokasjoner) {
+            let kameraUrler = lokasjoner[i].kameraUrler;
+            for(var y in kameraUrler) {
+                imgHtml = imgHtml + "<img src=\"" + kameraUrler[y] + "\"><br>";
+            }
+        }
+        document.getElementById("images").innerHTML = imgHtml;
+
+        let trafikkmeldinger = jsonObject.trafikkmeldinger;
+
+        for(var i in trafikkmeldinger) {
+            messageHtml= messageHtml + "<br>" + trafikkmeldinger[i].beskrivelse + "<br><h6></h6>Start: " + trafikkmeldinger[i].startTid.toString() +" ->>  Slutt: " + trafikkmeldinger[i].sluttTid.toString() +"</h6><br><br>";
         }
         if(messageHtml.length==0) {
             messageHtml = "Ingen meldinger :) <br><br>";
         }
         document.getElementById("message").innerHTML = messageHtml;
     }
-
+    function updateAllMessages(){
+        httpGet("/api/updateFjell")
+    }
 </script>
 
 </body>

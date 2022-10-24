@@ -2,19 +2,25 @@ package com.example.assortedservices3.vegvesen
 
 import com.example.assortedservices3.GetHelper
 import com.google.gson.Gson
+import java.time.LocalDateTime
 
 class Fjelloverganger {
 
     var fjell = arrayOf<Fjell>()
+    var lastUpdated = LocalDateTime.now().plusMinutes(-10)
 
     fun getFjelloverganger ():Array<Fjell>  {
 
         var api = GetHelper()
-
-        var json =  api.getRequest("https://fjelloverganger-backend.atlas.vegvesen.no/fjelloverganger")
-
         val gson = Gson()
-        fjell = gson.fromJson(json, Array<Fjell>::class.java)
+        var json = ""
+
+        if(lastUpdated.plusMinutes(5)<LocalDateTime.now()) {
+            json =  api.getRequest("https://fjelloverganger-backend.atlas.vegvesen.no/fjelloverganger")
+            fjell = gson.fromJson(json, Array<Fjell>::class.java)
+            lastUpdated = LocalDateTime.now()
+            println("!fjell info updated")
+        }
         return fjell
     }
     fun getFjell(navn:String) : Fjell {
@@ -48,5 +54,14 @@ class Fjelloverganger {
             i++
         }
         return urlList
+    }
+    fun getAllFjell(): List<String> {
+        var fjellOversikt = arrayListOf<String>()
+        var i = 0
+        while(fjell.size>i){
+            fjellOversikt.add(fjell[i].navn)
+            i++
+        }
+        return fjellOversikt
     }
 }
