@@ -14,7 +14,6 @@
 
 <script>
     function httpGet(theUrl) {
-
         try{
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
@@ -23,7 +22,6 @@
         } catch (err) {
             return "API Error: " + err;
         }
-
     }
     function initialLoadOfFjell() {
 

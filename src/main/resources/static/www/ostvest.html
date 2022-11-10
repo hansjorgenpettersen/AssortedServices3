@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Øst-Vest</title>
+</head>
+<body onload="loadPage()">
+
+<center><H4><div id="msgHardangervidda"></div></H4></center>
+<center><div id="imgHardangervidda"></div></center>
+
+<center><H4><div id="msgHol - Aurland"></div></H4></center>
+<center><div id="imgHol - Aurland"></div></center>
+
+<center><H4><div id="msgHemsedalsfjellet"></div></H4></center>
+<center><div id="imgHemsedalsfjellet"></div></center>
+
+<script>
+    function httpGet(theUrl) {
+        try{
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        } catch (err) {
+            return "API Error: " + err;
+        }
+    }
+    function updateFjell(fjellNavn){
+
+        let jsonObject = JSON.parse(httpGet("/api/getFjell?navn="+fjellNavn));
+
+        let imgHtml = "";
+        let messageHtml = fjellNavn;
+
+        let lokasjoner =  jsonObject.lokasjoner;
+        for (var i in lokasjoner) {
+            let kameraUrler = lokasjoner[i].kameraUrler;
+            for(var y in kameraUrler) {
+                imgHtml = imgHtml + "<img src=\"" + kameraUrler[y] + "\"><br>";
+            }
+        }
+        document.getElementById("img" + fjellNavn).innerHTML = imgHtml;
+
+        let trafikkmeldinger = jsonObject.trafikkmeldinger;
+
+        for(var i in trafikkmeldinger) {
+            messageHtml= messageHtml + "<br>" + trafikkmeldinger[i].beskrivelse + "<br><h6></h6>Start: " + trafikkmeldinger[i].startTid.toString() +" ->>  Slutt: " + trafikkmeldinger[i].sluttTid.toString() +"</h6><br><br>";
+        }
+        if(messageHtml.length==fjellNavn) {
+            messageHtml = fjellNavn + "<br>Ingen meldinger :) <br><br>";
+        }
+        document.getElementById("msg" +fjellNavn).innerHTML = messageHtml;
+    }
+    function loadPage(){
+        httpGet("/api/updateFjell");
+        updateFjell("Hardangervidda");
+        updateFjell("Hol - Aurland");
+        updateFjell("Hemsedalsfjellet");
+    }
+
+</script>
+</body>
+</html>
